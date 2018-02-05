@@ -1,0 +1,12 @@
+infra_commits <- read.csv('/Users/derrick/Downloads/infra-commit-lengths-over-time.csv', sep='%', col.names=c('time_string', 'commit', 'median', 'average'))
+infra_commits$time <- as.POSIXct(infra_commits$time_string, tz="UTC", format="%a, %d %b %Y %H:%M:%S %z" )
+max_commit_stat <- max(c(max(infra_commits$median), max(infra_commits$average)))
+plot(c(),type='n',xlim=c(min(as.numeric(infra_commits$time)), max(as.numeric(infra_commits$time))), ylim=c(0,max_commit_stat * 1.2), xaxt="n", main='Infra Commit Messages', xlab="", ylab="Words In First Line", bty="l")
+axis.POSIXct(1, at=seq(min(infra_commits$time), max(infra_commits$time), by="week"), labels=strftime(unique(seq(min(infra_commits$time), max(infra_commits$time), by="week")),"%b %d, %y"), las=2)
+rect(as.POSIXct('Fri, 12 May 2017 12:00:00 -0800', tz="UTC", format="%a, %d %b %Y %H:%M:%S %z" ), 0, as.POSIXct('Fri, 19 May 2017 12:00:00 -0800', tz="UTC", format="%a, %d %b %Y %H:%M:%S %z" ), max_commit_stat, col='#E8E8E8')
+text(as.POSIXct('Fri, 12 May 2017 12:00:00 -0800', tz="UTC", format="%a, %d %b %Y %H:%M:%S %z" ),max_commit_stat+.25, "Derrick starts")
+lines(infra_commits$time, infra_commits$median, col='#7fc97f')
+lines(infra_commits$time, infra_commits$average, col='#beaed4')
+legend(max(infra_commits$time) - (55 * 86400), y = 1, legend = 'median', fill='#7fc97f', bty='n')
+legend(max(infra_commits$time) - (55 * 86400), y = .5, legend = 'mean', fill='#beaed4', bty='n')
+
